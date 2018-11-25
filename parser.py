@@ -18,24 +18,23 @@ def get_token():
         token = f.readline()
     return token.strip()
 
-def slacker_post():
+def slacker_post(user, title, link):
     token = get_token()
     attatchment = [{
-        "title" : "title test",
-        "title_link" : "https://sonseungha.tistory.com"
+        "title" : "{}".format(title),
+        "title_link" : "{}".format(link),
+
     }]
     slack = Slacker(token)
-    slack.chat.post_message(channel='#general', text='New article', attachments = attatchment)
+    slack.chat.post_message(channel = '#general', text = user, attachments = attatchment)
 
 def main():
     url_list = get_url_list()
 
     for url in url_list:
         f = feedparser.parse(url)
-        for var in f:
-            print(var)
-
-    slacker_post()
+        for var in f['entries']:
+            slacker_post(var.get('author'), var.get('title'), var.get('link'))
 
 if __name__=="__main__":
     main()
