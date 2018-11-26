@@ -1,6 +1,7 @@
+import sys
 import feedparser
 from slacker import Slacker
-from query import RssQuery
+#from query import RssQuery
 
 url_file = 'url_list'
 token_file = 'token_file'
@@ -14,8 +15,12 @@ def get_url_list():
 
 def get_token():
     token = ''
-    with open(token_file) as f:
-        token = f.readline()
+    try:
+        with open(token_file) as f:
+            token = f.readline()
+    except BaseException as e:
+        print(e)
+        sys.exit()
     return token.strip()
 
 def slacker_post(user, title, link):
