@@ -1,34 +1,34 @@
 import sys
 import feedparser
 from slacker import Slacker
+import json
 #from query import RssQuery
 
-url_file = 'url_list'
 token_file = 'token_file'
 
+class ParseConfig:
+    def __init__(self):
+        with open('config.json') as fjson:
+            self.json_data = json.load(fjson)
+
+    def url_list(self):
+        return self.json_data["url_list"]
+
+    def token(self):
+        return str(self.json_data["token"])
+
 def get_url_list():
-    url_list = []
-    with open(url_file) as f:
-        for data in f:
-            url_list.append(data)
+    pc = ParseConfig()
+    url_list = pc.url_list()
     return url_list
 
-def get_token():
-    token = ''
-    try:
-        with open(token_file) as f:
-            token = f.readline()
-    except BaseException as e:
-        print(e)
-        sys.exit()
-    return token.strip()
-
-def slacker_post(user, title, link):
-    token = get_token()
+def slacker_post(user, title, link, pubDate):
+    pc = ParseConfig()
+    token = pc.token()
     attatchment = [{
         "title" : "{}".format(title),
         "title_link" : "{}".format(link),
-
+        "pub_date" : "{}".format(pubDate),
     }]
     slack = Slacker(token)
     slack.chat.post_message(channel = '#general', text = user, attachments = attatchment)
@@ -39,7 +39,7 @@ def main():
     for url in url_list:
         f = feedparser.parse(url)
         for var in f['entries']:
-            slacker_post(var.get('author'), var.get('title'), var.get('link'))
+            slacker_post(var.get('author'), var.get('title'), var.get('link'), var.get('pubDate'))
 
 if __name__=="__main__":
     main()
