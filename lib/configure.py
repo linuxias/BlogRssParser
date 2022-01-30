@@ -9,6 +9,11 @@ class BotConfig:
     def url_list(self):
         return self.json_data["url_list"]
 
+    def nr_feed(self):
+        return self.json_data["nr_feed"]
+
     @staticmethod
     def token():
         return os.environ['SLACK_BOT_TOKEN']
+
+

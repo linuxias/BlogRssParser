@@ -1,4 +1,7 @@
 {
+	"author": "Son Seungha",
+	"contact": "linuxias@gmail.com",
+	"nr_feed": 5,
 	"url_list": [
 		"https://sonseungha.tistory.com/rss",
 		"https://www.docker.com/blog/rss"
